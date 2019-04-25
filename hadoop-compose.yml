@@ -1,7 +1,7 @@
 version: "2"
 services:
     hadoop-master:
-        image: hadoop-3.2.0:v4
+        image: hadoop:latest
         container_name: hadoop-master
         hostname: master
         networks:
@@ -29,7 +29,7 @@ services:
             - "2122:2122"
         
     hadoop-slave1: 
-        image: hadoop-3.2.0:v4
+        image: hadoop:latest
         container_name: hadoop-slave1
         hostname: slave1
         networks:
@@ -57,7 +57,7 @@ services:
             - "2122"
         
     hadoop-slave2: 
-        image: hadoop-3.2.0:v4
+        image: hadoop:latest
         container_name: hadoop-slave2
         hostname: slave2
         networks:

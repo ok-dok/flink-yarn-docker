@@ -63,20 +63,23 @@ ENV HADOOP_FILE_URL http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/had
 ENV HADOOP_ASC_URL https://www.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz.asc
 ENV HADOOP_KEYS_URL https://www.apache.org/dist/hadoop/common/KEYS
 
-# Install Hadoop
+# Download Hadoop
 RUN set -ex; \
     wget -nv -O hadoop.tar.gz "$HADOOP_FILE_URL"; \
     wget -nv -O hadoop.tar.gz.asc "$HADOOP_ASC_URL"; \
-    wget -nv -O KEYS "$HADOOP_KEYS_URL"; \
-    gpg --import KEYS; \
+    wget -nv -O KEYS "$HADOOP_KEYS_URL";
+
+# Verify and install Hadoop
+RUN gpg --import KEYS; \
     gpg --verify hadoop.tar.gz.asc hadoop.tar.gz; \
     rm -rf KEYS hadoop.tar.gz.asc; \
     \
-    tar -zxvf hadoop.tar.gz --strip-components=1; \
+    tar -zxf hadoop.tar.gz --strip-components=1; \
     rm hadoop.tar.gz; \
     \
     mkdir logs; \
-    chown -R hadoop:hadoop .;
+    chown -R hadoop:hadoop .; \
+    chmod -R 755 .;
     
 # Copy configuration files
 COPY core-site.xml  ${HADOOP_CONF_HOME}/
@@ -92,7 +95,8 @@ WORKDIR /home/hadoop
 RUN mkdir -p tmp hdfs/name hdfs/data .ssh; \
     ssh-keygen -q -N "" -t rsa -f .ssh/id_rsa; \
     cp .ssh/id_rsa.pub .ssh/authorized_keys; \
-    chown -R hadoop:hadoop .
+    chown -R hadoop:hadoop .; \
+    chmod -R 700 .ssh;
 
 # Configure container
 COPY --chown=root:root docker-entrypoint.sh /
