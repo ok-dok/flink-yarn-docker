@@ -77,10 +77,8 @@ RUN gpg --import KEYS; \
     tar -zxf hadoop.tar.gz --strip-components=1; \
     rm hadoop.tar.gz; \
     \
-    mkdir logs; \
-    chown -R hadoop:hadoop .; \
-    chmod -R 755 .;
-    
+    chown -R hadoop:hadoop .; 
+
 # Copy configuration files
 COPY core-site.xml  ${HADOOP_CONF_HOME}/
 COPY hdfs-site.xml  ${HADOOP_CONF_HOME}/
