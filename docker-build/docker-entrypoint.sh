@@ -18,7 +18,7 @@ configure() {
 
   # Configure zookeeper servers
   column=`grep -n 'high-availability.zookeeper.quorum'  $FLINK_HOME/conf/flink-conf.yaml | awk -F ':' '{print int($1)}'`
-  gosu hadoop sed -i "${column}c high-availability.zookeeper.quorum: ${ZK_SERVERS}" $FLINK_HOME/conf/flink-conf.yaml
+  gosu flink sed -i "${column}c high-availability.zookeeper.quorum: ${ZK_SERVERS}" $FLINK_HOME/conf/flink-conf.yaml
 }
 
 configure
@@ -26,7 +26,7 @@ configure
 if [ "$1" = '-m' ]; then
   /start-dfs-cluster.sh
   /start-yarn-cluster.sh
-  sleep 20
+  sleep 30
   gosu flink $FLINK_HOME/bin/yarn-session.sh -n 3 -jm 4096 -tm 8192 -s 8 -nm FlinkOnYarnSession -d -st
   shift
 fi
