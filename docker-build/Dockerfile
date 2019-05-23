@@ -39,7 +39,7 @@ RUN set -ex; \
   tar -xf flink.tgz --strip-components=1; \
   rm flink.tgz; \
   \
-  chown -R flink:flink .;
+  chown -R flink:hadoop .;
 
 # Copy hadoop container's sshkey, without sshkey flink cannot connect to port 8032 of yarn resourcemanager.
 RUN cp -r /home/hadoop/.ssh ./; 
