@@ -1,9 +1,9 @@
 version: "2"
 services:
-    hadoop1:
-        image: flink:1.8.0-HA
-        container_name: hadoop-nn1-rm1
-        hostname: hadoop-nn1-rm1
+    flink-hadoop1:
+        build: ./docker-build
+        container_name: flink-hadoop-nn1-rm1
+        hostname: flink-hadoop-nn1-rm1
         depends_on:
             - zk1
             - zk2
@@ -16,9 +16,9 @@ services:
                     - rm1
         environment:
             ZK_SERVERS: zk1:2181,zk2:2181,zk3:2181
-            HADOOP_WORKER_NAMES: hadoop1 hadoop2 hadoop3
-            HDFS_JOURNAL_NODES: hadoop1:8485,hadoop2:8485,hadoop3:8485
-            FLINK_WORKER_NAMES: hadoop1 hadoop2 hadoop3
+            HADOOP_WORKER_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
+            HDFS_JOURNAL_NODES: flink-hadoop1:8485,flink-hadoop2:8485,flink-hadoop3:8485
+            FLINK_SLAVE_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
         ports:
             - "8020:8020"
             - "8030:8030"
@@ -56,10 +56,10 @@ services:
             - "8082:8082"
         command: [ "-m", "-d" ]
         
-    hadoop2: 
-        image: flink:1.8.0-HA
-        container_name: hadoop-nn2-rm2
-        hostname: hadoop-nn2-rm2
+    flink-hadoop2: 
+        build: ./docker-build
+        container_name: flink-hadoop-nn2-rm2
+        hostname: flink-hadoop-nn2-rm2
         depends_on:
             - zk1
             - zk2
@@ -72,18 +72,18 @@ services:
                     - rm2
         environment:
             ZK_SERVERS: zk1:2181,zk2:2181,zk3:2181
-            HADOOP_WORKER_NAMES: hadoop1 hadoop2 hadoop3
-            HDFS_JOURNAL_NODES: hadoop1:8485,hadoop2:8485,hadoop3:8485
-            FLINK_WORKER_NAMES: hadoop1 hadoop2 hadoop3
+            HADOOP_WORKER_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
+            HDFS_JOURNAL_NODES: flink-hadoop1:8485,flink-hadoop2:8485,flink-hadoop3:8485
+            FLINK_SLAVE_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
         ports:
             - "9088:8088"
             - "50071:50070"
         command: [ "-d" ]
         
-    hadoop3: 
-        image: flink:1.8.0-HA
-        container_name: hadoop-slave1
-        hostname: hadoop-slave1
+    flink-hadoop3: 
+        build: ./docker-build
+        container_name: flink-hadoop-slave1
+        hostname: flink-hadoop-slave1
         depends_on:
             - zk1
             - zk2
@@ -94,9 +94,9 @@ services:
                     - slave1
         environment:
             ZK_SERVERS: zk1:2181,zk2:2181,zk3:2181
-            HADOOP_WORKER_NAMES: hadoop1 hadoop2 hadoop3
-            HDFS_JOURNAL_NODES: hadoop1:8485,hadoop2:8485,hadoop3:8485 
-            FLINK_WORKER_NAMES: hadoop1 hadoop2 hadoop3
+            HADOOP_WORKER_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
+            HDFS_JOURNAL_NODES: flink-hadoop1:8485,flink-hadoop2:8485,flink-hadoop3:8485 
+            FLINK_SLAVE_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
         command: [ "-d" ]
 
     zk1:
