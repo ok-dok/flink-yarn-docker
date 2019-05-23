@@ -61,4 +61,4 @@ RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 6123 8081 8082
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD [ "bash ]
+CMD [ "bash" ]
