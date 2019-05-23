@@ -15,8 +15,8 @@ WORKDIR $FLINK_HOME
 
 ENV FLINK_FILE_NAME=flink-${FLINK_VERSION}-bin-${HADOOP_SCALA_VARIANT}.tgz 
 # Not all mirrors have the .asc files
-ENV FLINK_TGZ_URL=https://www.apache.org/dist/flink/flink-${FLINK_VERSION}/${FLINK_FILE_NAME} \
-    FLINK_ASC_URL=https://www.apache.org/dist/flink/flink-${FLINK_VERSION}/${FLINK_FILE_NAME}.asc
+ENV FLINK_TGZ_URL=http://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-${FLINK_VERSION}/${FLINK_FILE_NAME} \
+    FLINK_ASC_URL=https://www-us.apache.org/dist/flink/flink-${FLINK_VERSION}/${FLINK_FILE_NAME}.asc
 ENV SHADED_HADOOP_URL=https://repo.maven.apache.org/maven2/org/apache/flink/flink-shaded-hadoop2-uber/2.8.3-${FLINK_VERSION}/flink-shaded-hadoop2-uber-2.8.3-${FLINK_VERSION}.jar
 
 # Install flink
