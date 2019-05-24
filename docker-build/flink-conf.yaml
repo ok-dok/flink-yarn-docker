@@ -199,6 +199,7 @@ jobmanager.web.port: 8081
 # taskmanager.network.memory.fraction: 0.1
 # taskmanager.network.memory.min: 64mb
 # taskmanager.network.memory.max: 1gb
+containerized.heap-cutoff-min: 256
 
 #==============================================================================
 # Flink Cluster Security Configuration

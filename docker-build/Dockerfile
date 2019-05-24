@@ -11,13 +11,13 @@ ENV PATH=$FLINK_HOME/bin:$PATH
 RUN useradd --system --home-dir $FLINK_HOME --uid=9999 --gid=hadoop -s /bin/bash -c "Flink Account" flink
 COPY flink-profile.sh /etc/profile.d/
 
-WORKDIR $FLINK_HOME
-
 ENV FLINK_FILE_NAME=flink-${FLINK_VERSION}-bin-${HADOOP_SCALA_VARIANT}.tgz 
 # Not all mirrors have the .asc files
 ENV FLINK_TGZ_URL=http://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-${FLINK_VERSION}/${FLINK_FILE_NAME} \
     FLINK_ASC_URL=https://www-us.apache.org/dist/flink/flink-${FLINK_VERSION}/${FLINK_FILE_NAME}.asc
-ENV SHADED_HADOOP_URL=https://repo.maven.apache.org/maven2/org/apache/flink/flink-shaded-hadoop2-uber/2.8.3-${FLINK_VERSION}/flink-shaded-hadoop2-uber-2.8.3-${FLINK_VERSION}.jar
+ENV SHADED_HADOOP_URL=http://repo2.maven.org/maven2/org/apache/flink/flink-shaded-hadoop2-uber/2.8.3-${FLINK_VERSION}/flink-shaded-hadoop2-uber-2.8.3-${FLINK_VERSION}.jar
+
+WORKDIR $FLINK_HOME
 
 # Install flink
 RUN set -ex; \
@@ -37,9 +37,15 @@ RUN set -ex; \
   rm -rf "$GNUPGHOME" flink.tgz.asc; \
   \
   tar -xf flink.tgz --strip-components=1; \
-  rm flink.tgz; \
-  \
-  chown -R flink:hadoop .;
+  wget -nv -P lib/ ${SHADED_HADOOP_URL}; \
+  rm flink.tgz; 
+
+# Create a soft link of java because flink will find '/bin/java'.
+# Replace slf4j-log4j12-1.7.15.jar with  slf4j-log4j12-1.7.25.jar. 
+# Download the optional pre-bundled Hadoop that matches your version and place it in the lib folder of Flink
+RUN ln -s $JAVA_HOME/bin/java /bin/java; \
+    rm -f ./lib/slf4j-log4j12-1.7.15.jar; \
+    ln -s /opt/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar ./lib/slf4j-log4j12-1.7.25.jar;
 
 # Copy hadoop container's sshkey, without sshkey flink cannot connect to port 8032 of yarn resourcemanager.
 RUN cp -r /home/hadoop/.ssh ./; 
@@ -47,13 +53,7 @@ RUN cp -r /home/hadoop/.ssh ./;
 # Copy configuration file.
 COPY flink-conf.yaml conf/
 
-# Create a soft link of java because flink will find '/bin/java'.
-# Replace slf4j-log4j12-1.7.15.jar with  slf4j-log4j12-1.7.25.jar. 
-# Download the optional pre-bundled Hadoop that matches your version and place it in the lib folder of Flink
-RUN ln -s $JAVA_HOME/bin/java /bin/java; \
-    rm -f $FLINK_HOME/lib/slf4j-log4j12-1.7.15.jar; \
-    ln -s /opt/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.25.jar $FLINK_HOME/lib/slf4j-log4j12-1.7.25.jar; \
-    wget -nv -P ${FLINK_HOME}/lib/ ${SHADED_HADOOP_URL}
+RUN chown -R flink:hadoop .;
 
 # Configure container
 COPY docker-entrypoint.sh /
