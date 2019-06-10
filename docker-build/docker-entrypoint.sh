@@ -26,8 +26,8 @@ configure
 if [ "$1" = '-m' ]; then
   /start-dfs-cluster.sh
   /start-yarn-cluster.sh
-  sleep 30
-  gosu flink $FLINK_HOME/bin/yarn-session.sh -n 3 -jm 4096 -tm 8192 -s 8 -nm FlinkOnYarnSession -d -st
+  sleep 60
+  gosu flink $FLINK_HOME/bin/yarn-session.sh -n 3 -jm 1024 -tm 1024 -s 2 -nm FlinkOnYarnSession -d -st
   shift
 fi
 

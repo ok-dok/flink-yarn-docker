@@ -20,6 +20,12 @@ services:
             HADOOP_WORKER_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
             HDFS_JOURNAL_NODES: flink-hadoop1:8485,flink-hadoop2:8485,flink-hadoop3:8485
             FLINK_SLAVE_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
+            YARN_RM_AM_MAX_ATTEMPTS: 4
+            YARN_APP_MIN_MEMORY: 512
+            YARN_APP_MAX_MEMORY: 4096
+            YARN_NM_MEMROY: 4096
+            YARN_NM_VMEM_PMEM_RATIO: 5
+            YARN_NM_CPU_VCORES: 2
         ports:
             - "8020:8020"
             - "8030:8030"
@@ -77,6 +83,12 @@ services:
             HADOOP_WORKER_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
             HDFS_JOURNAL_NODES: flink-hadoop1:8485,flink-hadoop2:8485,flink-hadoop3:8485
             FLINK_SLAVE_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
+            YARN_RM_AM_MAX_ATTEMPTS: 4
+            YARN_APP_MIN_MEMORY: 512
+            YARN_APP_MAX_MEMORY: 4096
+            YARN_NM_MEMROY: 4096
+            YARN_NM_VMEM_PMEM_RATIO: 5
+            YARN_NM_CPU_VCORES: 2
         ports:
             - "9088:8088"
             - "50071:50070"
@@ -100,6 +112,12 @@ services:
             HADOOP_WORKER_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
             HDFS_JOURNAL_NODES: flink-hadoop1:8485,flink-hadoop2:8485,flink-hadoop3:8485 
             FLINK_SLAVE_NAMES: flink-hadoop1 flink-hadoop2 flink-hadoop3
+            YARN_RM_AM_MAX_ATTEMPTS: 4
+            YARN_APP_MIN_MEMORY: 512
+            YARN_APP_MAX_MEMORY: 4096
+            YARN_NM_MEMROY: 4096
+            YARN_NM_VMEM_PMEM_RATIO: 5
+            YARN_NM_CPU_VCORES: 2
         command: [ "-d" ]
 
     zk1:
