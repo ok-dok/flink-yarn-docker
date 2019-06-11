@@ -1,7 +1,6 @@
 version: "2"
 services:
     flink-hadoop1:
-        build: ./docker-build
         image: okdokey/flink-yarn:1.8.0
         container_name: flink-hadoop-nn1-rm1
         hostname: flink-hadoop-nn1-rm1
@@ -26,6 +25,7 @@ services:
             YARN_NM_MEMROY: 4096
             YARN_NM_VMEM_PMEM_RATIO: 5
             YARN_NM_CPU_VCORES: 2
+            FLINK_TM_SLOTS: 2
         ports:
             - "8020:8020"
             - "8030:8030"
@@ -58,13 +58,11 @@ services:
             - "19888:19888"
             - "19890:19890"
             - "10033:10033"
-            - "6123:6123"
             - "8081:8081"
             - "8082:8082"
         command: [ "-m", "-d" ]
         
     flink-hadoop2: 
-        build: ./docker-build
         image: okdokey/flink-yarn:1.8.0
         container_name: flink-hadoop-nn2-rm2
         hostname: flink-hadoop-nn2-rm2
@@ -89,13 +87,14 @@ services:
             YARN_NM_MEMROY: 4096
             YARN_NM_VMEM_PMEM_RATIO: 5
             YARN_NM_CPU_VCORES: 2
+            FLINK_TM_SLOTS: 2
         ports:
             - "9088:8088"
             - "50071:50070"
+
         command: [ "-d" ]
         
     flink-hadoop3: 
-        build: ./docker-build
         image: okdokey/flink-yarn:1.8.0
         container_name: flink-hadoop-slave1
         hostname: flink-hadoop-slave1
@@ -118,6 +117,7 @@ services:
             YARN_NM_MEMROY: 4096
             YARN_NM_VMEM_PMEM_RATIO: 5
             YARN_NM_CPU_VCORES: 2
+            FLINK_TM_SLOTS: 2
         command: [ "-d" ]
 
     zk1:
