@@ -85,7 +85,7 @@ high-availability.storageDir: hdfs:///flink/ha/
 # setup. This must be a list of the form:
 # "host1:clientPort,host2:clientPort,..." (default clientPort: 2181)
 #
-high-availability.zookeeper.quorum: localhost:2181
+high-availability.zookeeper.quorum: zk1:2181,zk2:2181,zk3:2181
 
 # ACL options are based on https://zookeeper.apache.org/doc/r3.1.2/zookeeperProgrammers.html#sc_BuiltinACLSchemes
 # It can be either "creator" (ZOO_CREATE_ALL_ACL) or "open" (ZOO_OPEN_ACL_UNSAFE)

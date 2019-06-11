@@ -1,13 +1,16 @@
 #!/bin/sh
 set -e
 
-. /etc/profile >/dev/null  2>&1
+setconf() {
+  FLINK_CONF_FILE=$FLINK_HOME/conf/flink-conf.yaml
+  KEY=$1
+  VALUE=$2
+  FILE=$3
+  sed -i "s#${KEY}:.*#${KEY}: ${VALUE}#g" $FLINK_CONF_FILE
+}
 
-service ssh start
-
-/configure-hadoop.sh
-
-configure() {
+configure_flink() {
+  
 
   if [ -n "$FLINK_SLAVE_NAMES" ] ; then
     gosu flink echo > $FLINK_HOME/conf/slaves
@@ -17,11 +20,39 @@ configure() {
   fi
 
   # Configure zookeeper servers
-  column=`grep -n 'high-availability.zookeeper.quorum'  $FLINK_HOME/conf/flink-conf.yaml | awk -F ':' '{print int($1)}'`
-  gosu flink sed -i "${column}c high-availability.zookeeper.quorum: ${ZK_SERVERS}" $FLINK_HOME/conf/flink-conf.yaml
+  if [ -n ${ZK_SERVERS} ]; then
+    # sed -i "s#high-availability.zookeeper.quorum:.*#high-availability.zookeeper.quorum: ${ZK_SERVERS}" $FLINK_CONF_FILE
+    setconf "high-availability.zookeeper.quorum" "${ZK_SERVERS}"
+  fi
+
+  # Configure jobmanager rpc port
+  if [ -n $FLINK_JM_RPC_PORT ]; then
+    setconf "jobmanager.rpc.port" "${FLINK_JM_RPC_PORT}"
+  fi
+
+  # Configure jobmanager heap size
+  if [ -n $FLINK_JM_HEAP_SIZE ]; then
+    setconf "jobmanager.heap.size" "${FLINK_JM_HEAP_SIZE}"
+  fi
+
+  # Configure taskmanager heap size
+  if [ -n $FLINK_TM_HEAP_SIZE ]; then
+    setconf "taskmanager.heap.size" "${FLINK_TM_HEAP_SIZE}"
+  fi
+
+  # Configure taskmanager heap size
+  if [ -n ${FLINK_TM_SLOTS} ]; then
+    setconf "taskmanager.numberOfTaskSlots" "${FLINK_TM_SLOTS}"
+  fi
 }
 
-configure
+. /etc/profile >/dev/null  2>&1
+
+service ssh start
+
+/configure-hadoop.sh
+
+configure_flink
 
 if [ "$1" = '-m' ]; then
   /start-dfs-cluster.sh
